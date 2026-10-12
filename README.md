@@ -16,7 +16,7 @@ The Adaptive Security Gateway sits in front of your web applications, intercepti
 - **14-Stage Inspection Pipeline:** Modular request processing including canonicalization, device profiling, session tracking, and threat intelligence integration.
 - **Dynamic Risk Engine:** Calculates real-time risk scores based on ML confidence, IP reputation, and anomalous behavioral patterns.
 - **Fail-Closed Security Posture:** Built-in heuristic signature fallbacks guarantee protection even if the ML model is offline or degraded.
-- **SOC Dashboard:** A modern React + Vite frontend for analysts to triage incidents, monitor traffic, and review blocked requests.
+- **SOC Dashboard ("Midnight Sentinel"):** Next-gen dark-mode SOC command interface with real-time incident telemetry, time-series volume vs. risk charts, verdict donut distribution, interactive payload simulator sandbox, and forensic rule breakdown.
 - **Graceful Degradation:** Automatic fallback from MongoDB to in-memory storage if the database becomes unreachable.
 - **Incident Management API:** RESTful endpoints to query, filter, and update incident statuses (e.g., True/False Positive resolutions).
 
@@ -34,10 +34,11 @@ The Adaptive Security Gateway sits in front of your web applications, intercepti
 - **PyTorch** (>=2.0.0) — Core deep learning framework
 - **Scikit-learn, Pandas, NumPy** — Data preprocessing and evaluation
 
-### Frontend (SOC Dashboard)
-- **React** (18.2.0)
-- **Vite** (4.4.0) — Build tool and dev server
-- **Lucide React** — Iconography
+### Frontend (SOC Dashboard - "Midnight Sentinel")
+- **React** 19 + **Vite** — High-performance SPA build tool & dev server
+- **Tailwind CSS** — Modern dark-mode SOC theme styling with custom cyber accents
+- **Recharts** — Real-time time-series telemetry charts & verdict distribution donut visualizations
+- **Lucide React** — Cybersecurity iconography & status badges
 
 ---
 
