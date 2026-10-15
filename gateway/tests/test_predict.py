@@ -341,3 +341,40 @@ def test_predict_empty_payload(client):
     data = response.get_json()
     assert data["label"] == "benign"
     assert data["verdict"] == "ALLOW"
+
+
+def test_predict_allowed_request_telemetry_logged(client):
+    """Verify that allowed / benign requests are logged into incident telemetry and queryable."""
+    clear_incidents()
+    response = client.post(
+        "/predict",
+        json={
+            "method": "POST",
+            "path": "/api/search",
+            "ip": "192.168.1.10",
+            "payload": "wireless noise cancelling headphones 2026",
+        },
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["verdict"] == "ALLOW"
+    assert data["label"] == "benign"
+    assert data["incident_id"] is not None
+
+    # Verify incident feed retrieval
+    incidents = get_all_incidents()
+    assert len(incidents) >= 1
+    matched = next((i for i in incidents if i["id"] == data["incident_id"]), None)
+    assert matched is not None
+    assert matched["verdict"] == "ALLOW"
+    assert matched["attack_type"] == "benign"
+    assert matched["status"] == "RESOLVED"
+    assert matched["client_ip"] == "192.168.1.10"
+
+    # Verify GET /api/incidents with filter verdict=ALLOW
+    feed_res = client.get("/api/incidents?verdict=ALLOW")
+    assert feed_res.status_code == 200
+    feed_data = feed_res.get_json()["data"]
+    assert feed_data["total"] >= 1
+    assert any(i["id"] == data["incident_id"] for i in feed_data["items"])
+

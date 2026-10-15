@@ -214,7 +214,7 @@ This document provides a set of rigorous, real-world test cases designed to manu
 * **Validation Check**:
   - `verdict`: `"ALLOW"`
   - `label`: `"benign"`
-  - `incident_id`: `null` (no security violation generated)
+  - `incident_id`: Valid non-null telemetry identifier recorded in database (triage status: RESOLVED)
 
 ---
 

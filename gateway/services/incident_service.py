@@ -38,6 +38,7 @@ def log_incident(
     risk_score: float,
     verdict: str,
     risk_components: Optional[Dict[str, Any]] = None,
+    latency_ms: Optional[float] = None,
 ) -> Dict[str, Any]:
     """
     Persist incident record into MongoDB (and fallback in-memory cache).
@@ -48,6 +49,7 @@ def log_incident(
         risk_score: Calculated cumulative risk score.
         verdict: Final policy enforcement verdict ('BLOCK', 'MONITOR', 'RATE_LIMIT', etc.).
         risk_components: Optional breakdown of risk weights.
+        latency_ms: Optional latency benchmark in milliseconds.
 
     Returns:
         Logged incident dictionary.
@@ -58,6 +60,8 @@ def log_incident(
 
     label = detection_info.get("label", "benign")
     confidence = float(detection_info.get("confidence", 0.0))
+    status = "RESOLVED" if verdict == "ALLOW" else "OPEN"
+    notes = "Clean benign traffic passed" if verdict == "ALLOW" else ""
 
     incident = {
         "id": incident_id,
@@ -72,8 +76,9 @@ def log_incident(
         "risk_score": float(risk_score),
         "risk_components": risk_components or {},
         "verdict": verdict,
-        "status": "OPEN",
-        "analyst_notes": "",
+        "latency_ms": latency_ms,
+        "status": status,
+        "analyst_notes": notes,
         "updated_at": now,
     }
 

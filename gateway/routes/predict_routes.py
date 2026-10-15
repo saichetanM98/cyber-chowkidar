@@ -119,14 +119,20 @@ def inspect_request():
     )
     final_verdict = policy_details["final_verdict"]
 
-    # 12. Incident Service (persist and record violation if flagged)
-    incident_record = None
-    if final_verdict != "ALLOW":
-        incident_record = log_incident(parsed, detection, risk_score, final_verdict)
-        record_violation(session_id, parsed["ip"], device.get("fingerprint"))
-
     latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
     risk_level = compute_risk_level(risk_score, final_verdict, detected_label)
+
+    # 12. Incident Service (persist telemetry into MongoDB; record violation if threat flagged)
+    incident_record = log_incident(
+        parsed,
+        detection,
+        risk_score,
+        final_verdict,
+        risk_components=risk_details.get("components"),
+        latency_ms=latency_ms,
+    )
+    if final_verdict != "ALLOW":
+        record_violation(session_id, parsed["ip"], device.get("fingerprint"))
 
     status_code = 200
     if final_verdict == "BLOCK":

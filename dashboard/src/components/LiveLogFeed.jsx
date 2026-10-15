@@ -201,12 +201,12 @@ export function LiveLogFeed({
               <ShieldCheck className="h-8 w-8" />
             </div>
             <h4 className="mt-4 text-sm font-bold text-slate-200">
-              Zero Active Threat Incidents
+              No Recorded Events
             </h4>
             <p className="mt-1 max-w-sm text-xs text-sentinel-muted">
-              {filters?.search || filters?.verdict !== 'ALL'
-                ? 'No incidents matched the applied filters. Try clearing filters or search terms.'
-                : 'All incoming traffic is benign, or gateway telemetry has just been initialized.'}
+              {filters?.search || filters?.verdict !== 'ALL' || filters?.attack_type !== 'ALL' || filters?.status !== 'ALL'
+                ? 'No events matched the applied filters. Try clearing filters or search terms.'
+                : 'No gateway telemetry events recorded yet. Use the simulator or send requests to start streaming.'}
             </p>
           </div>
         ) : (

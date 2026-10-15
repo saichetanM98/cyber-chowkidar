@@ -124,5 +124,12 @@ def get_top_offenders(limit: int = 10) -> List[Dict[str, Any]]:
     for o in offenders:
         o["attack_types"] = sorted(list(o["attack_types"]))
 
-    offenders.sort(key=lambda x: (x["incident_count"], x["highest_risk"]), reverse=True)
-    return offenders[:limit]
+    adversaries = [
+        o
+        for o in offenders
+        if o["highest_risk"] >= 40.0
+        or any(a in ("sqli", "xss") for a in o["attack_types"])
+        or o["last_verdict"] in ("BLOCK", "RATE_LIMIT", "MONITOR")
+    ]
+    adversaries.sort(key=lambda x: (x["incident_count"], x["highest_risk"]), reverse=True)
+    return adversaries[:limit]
